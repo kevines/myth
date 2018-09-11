@@ -96,6 +96,7 @@ public class MythInitServiceImpl implements MythInitService {
         //spi  serialize
         final SerializeEnum serializeEnum = SerializeEnum.acquire(mythConfig.getSerializer());
         final ServiceLoader<ObjectSerializer> objectSerializers = ServiceBootstrap.loadAll(ObjectSerializer.class);
+
         final ObjectSerializer serializer =
                 StreamSupport.stream(objectSerializers.spliterator(),
                         true)
@@ -103,6 +104,7 @@ public class MythInitServiceImpl implements MythInitService {
                         .findFirst()
                         .orElse(new KryoSerializer());
         coordinatorService.setSerializer(serializer);
+        //在spring中,kryo的序列化实现注入
         SpringBeanUtils.getInstance().registerBean(ObjectSerializer.class.getName(), serializer);
         //spi  repository support
         final RepositorySupportEnum repositorySupportEnum = RepositorySupportEnum.acquire(mythConfig.getRepositorySupport());

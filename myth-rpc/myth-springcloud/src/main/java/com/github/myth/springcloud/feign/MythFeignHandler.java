@@ -35,6 +35,7 @@ import java.util.Objects;
 
 /**
  * MythFeignHandler.
+ *
  * @author xiaoyu
  */
 public class MythFeignHandler implements InvocationHandler {
@@ -53,8 +54,7 @@ public class MythFeignHandler implements InvocationHandler {
                 return this.handlers.get(method).invoke(args);
             }
             try {
-                final MythTransactionEngine mythTransactionEngine =
-                        SpringBeanUtils.getInstance().getBean(MythTransactionEngine.class);
+                final MythTransactionEngine mythTransactionEngine = SpringBeanUtils.getInstance().getBean(MythTransactionEngine.class);
                 final MythParticipant participant = buildParticipant(myth, method, args);
                 if (Objects.nonNull(participant)) {
                     mythTransactionEngine.registerParticipant(participant);
@@ -73,14 +73,10 @@ public class MythFeignHandler implements InvocationHandler {
         MythParticipant participant;
         if (Objects.nonNull(mythTransactionContext)) {
             final Class declaringClass = myth.target();
-            MythInvocation mythInvocation =
-                    new MythInvocation(declaringClass, method.getName(), method.getParameterTypes(), args);
+            MythInvocation mythInvocation = new MythInvocation(declaringClass, method.getName(), method.getParameterTypes(), args);
             final Integer pattern = myth.pattern().getCode();
             //封装调用点
-            participant = new MythParticipant(mythTransactionContext.getTransId(),
-                    myth.destination(),
-                    pattern,
-                    mythInvocation);
+            participant = new MythParticipant(mythTransactionContext.getTransId(), myth.destination(), pattern, mythInvocation);
             return participant;
         }
         return null;

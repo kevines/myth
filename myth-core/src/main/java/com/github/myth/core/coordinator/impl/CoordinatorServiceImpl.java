@@ -55,9 +55,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void start(final MythConfig mythConfig) {
+        //com.github.myth.core.service.impl.MythInitServiceImpl 的init中，已经将JDBC的repository注入进去
         coordinatorRepository = SpringBeanUtils.getInstance().getBean(CoordinatorRepository.class);
         final String repositorySuffix = buildRepositorySuffix(mythConfig.getRepositorySuffix());
         //初始化spi 协调资源存储
+        //JDBC初始化
         coordinatorRepository.init(repositorySuffix, mythConfig);
     }
 
